@@ -1,0 +1,21 @@
+EventName,Location,Address,OrganizerName,EventDate,EventTime,EventType
+Tech Conference,Karachi,123 Street,ABC Org,1/1/2024,10:00 AM,Conference
+Code Meetup,Lahore,456 Road,XYZ Group,1/5/2024,2:00 PM,Meeting
+AI Symposium,Islamabad,789 Avenue,Tech Innovators,2/10/2024,9:00 AM,Symposium
+Data Science Workshop,Karachi,101 Road,Data Academy,3/15/2024,1:00 PM,Workshop
+Web Dev Bootcamp,Lahore,202 Lane,Code Master,4/20/2024,11:00 AM,Coding Bootcamp
+Blockchain Summit,Karachi,303 Street,Chain Solutions,5/25/2024,10:30 AM,Conference
+Design Thinking Seminar,Islamabad,404 Blvd,Creative Minds,6/12/2024,3:00 PM,Seminar
+Cloud Computing Expo,Lahore,505 Road,Cloud Tech,7/18/2024,2:30 PM,Expo
+Cybersecurity Conference,Karachi,606 Avenue,Secure IT,8/22/2024,10:00 AM,Conference
+Mobile App Hackathon,Islamabad,707 Lane,App Innovators,9/5/2024,9:00 AM,Hackathon
+IoT Summit,Lahore,808 Street,IoT Solutions,10/16/2024,1:30 PM,Conference
+Big Data Meetup,Karachi,909 Road,Big Data Co,11/7/2024,2:00 PM,Meetup
+UX/UI Workshop,Islamabad,1000 Blvd,Design Lab,12/4/2024,9:30 AM,Workshop
+Agile Scrum Training,Lahore,1101 Lane,Agile Master,1/20/2025,10:00 AM,Training
+Machine Learning Course,Karachi,1202 Road,ML Academy,2/11/2025,11:00 AM,Course
+Front-End Development Bootcamp,Islamabad,1303 Avenue,Code School,3/22/2025,9:00 AM,Coding Bootcamp
+Tech Talk,Karachi,1404 Lane,Tech Trends,4/19/2025,3:00 PM,Talk
+DevOps Meetup,Lahore,1505 Road,DevOps Community,5/13/2025,6:00 PM,Meetup
+Game Development Expo,Karachi,1606 Street,Game Creators,6/2/2025,10:00 AM,Expo
+VR/AR Conference,Islamabad,1707 Blvd,Immersive Tech,7/30/2025,9:30 AM,Conference

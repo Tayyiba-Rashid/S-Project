@@ -1,101 +1,167 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import { parseCSV } from "@/app/utils/utils"; // Ensure parseCSV is defined
+import Form from "./components/Form";
+import Grid from "./components/Grid";
 
-export default function Home() {
+const Event = {
+  EventName: "",
+  Location: "",
+  Address: "",
+  OrganizerName: "",
+  EventDate: "",
+  EventTime: "",
+  EventType: "Conference",
+};
+
+function App() {
+  const [data, setData] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newEvent, setNewEvent] = useState(Event);
+  const [search, setSearch] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [currentEditIndex, setCurrentEditIndex] = useState(null);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const data = await parseCSV();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewEvent((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddEvent = () => {
+    setData((prev) => [...prev, newEvent]);
+    resetForm();
+  };
+
+  const handleEditEvent = (index) => {
+    const eventToEdit = data[index];
+    setNewEvent(eventToEdit);
+    setCurrentEditIndex(index);
+    setEditMode(true);
+    setShowPopup(true);
+  };
+
+  const handleSaveEdit = () => {
+    const updatedData = [...data];
+    updatedData[currentEditIndex] = newEvent;
+    setData(updatedData);
+    resetForm();
+  };
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
+
+  const handleCityChange = (e) => {
+    setSelectedCity(e.target.value);
+  };
+
+  const filteredData = data.filter((row) => {
+    const matchesSearch = row.EventName.toLowerCase().includes(
+      search.toLowerCase()
+    );
+    const matchesCity =
+      !selectedCity ||
+      row.Location.toLowerCase() === selectedCity.toLowerCase();
+    return matchesSearch && matchesCity;
+  });
+
+  const resetForm = () => {
+    setShowPopup(false);
+    setNewEvent(Event);
+    setEditMode(false);
+    setCurrentEditIndex(null);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="App min-h-dvh max-h-h-full ">
+      <div className="w-full flex justify-center items-center text-blue font-bold py-4 sm:py-6 md:pt-6 text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl">
+        TECH
+        <span className="pl-2 md:pl-4 text-pink text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl">
+          EVENTS
+        </span>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* SEARCH */}
+      <div className="search-filter px-4 pb-4  rounded-lg flex flex-col sm:flex-row sm:justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        {/* SEARCH INPUT */}
+        <input
+          type="text"
+          placeholder="Search by event name"
+          value={search}
+          onChange={handleSearchChange}
+          className="w-full sm:w-60 p-2 md:p-3 border text-[14px] md:text-[16px] xl:border-2 rounded-full border-blue placeholder:text-gray-500 text-gray-500 placeholder:bg-transparent focus:outline-none focus:ring-2 focus:ring-pink focus:border-transparent bg-transparent"
+        />
+
+        {/* CITY DROPDOWN FILTER */}
+        <select
+          onChange={handleCityChange}
+          value={selectedCity}
+          className="w-full sm:w-60 p-2 md:p-3 border text-[14px] md:text-[16px] xl:border-2 rounded-full border-blue placeholder:text-gray-500 text-gray-500 placeholder:bg-transparent focus:outline-none focus:ring-2 focus:ring-pink focus:border-transparent bg-transparent"
+        >
+          <option
+            className="text-black bg-transparent dark:bg-blue dark:text-white text-[14px] md:text-[16px]"
+            value=""
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Filter by city
+          </option>
+          {Array.from(new Set(data.map((row) => row.Location))).map((city) => (
+            <option
+              className="text-black bg-transparent dark:bg-blue dark:text-white text-[14px] md:text-[16px]"
+              key={city}
+              value={city}
+            >
+              {city}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* ADD EVENT BUTTON */}
+      <div className="w-full h-full flex items-center justify-end">
+        <button
+          className="bg-pink hover:bg-[#D40049] text-[14px] md:text-[16px] text-white p-2 md:px-4 md:py-4 rounded-lg mx-4 "
+          onClick={() => setShowPopup(true)}
+        >
+          Add Event
+        </button>
+      </div>
+      {/* GRID */}
+      {filteredData.length ? (
+        <Grid filteredData={filteredData} handleEditEvent={handleEditEvent} />
+      ) : (
+        <div className="w-full flex items-center justify-center bg-gray-100">
+          <p className=" text-pink">
+            NO DATA <span className="text-blue">FOUND!</span>
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )}
+
+      {/* FORM */}
+      {showPopup && (
+        <Form
+          newEvent={newEvent}
+          handleInputChange={handleInputChange}
+          editMode={editMode}
+          handleAddEvent={handleAddEvent}
+          resetForm={resetForm}
+          handleSaveEdit={handleSaveEdit}
+        />
+      )}
     </div>
   );
 }
+
+export default App;
